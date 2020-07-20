@@ -1,4 +1,5 @@
-import { NetInfo, Platform, View } from 'react-native';
+import { Platform, View } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 
 import reactMixin from 'react-mixin';
 import Trackr from 'trackr';
@@ -34,8 +35,7 @@ module.exports = {
   MeteorComplexListView,
   ReactiveDict,
   Collection,
-  FSCollectionImagesPreloader:
-    Platform.OS == 'android' ? View : FSCollectionImagesPreloader,
+  FSCollectionImagesPreloader: Platform.OS == 'android' ? View : FSCollectionImagesPreloader,
   collection(name, options) {
     return new Collection(name, options);
   },
@@ -169,14 +169,15 @@ module.exports = {
     });
 
     Data.ddp.on('removed', message => {
-      Data.db[message.collection] &&
-        Data.db[message.collection].del(message.id);
+      Data.db[message.collection] && Data.db[message.collection].del(message.id);
     });
     Data.ddp.on('result', message => {
       const call = Data.calls.find(call => call.id == message.id);
-      if (typeof call.callback == 'function')
-        call.callback(message.error, message.result);
-      Data.calls.splice(Data.calls.findIndex(call => call.id == message.id), 1);
+      if (typeof call.callback == 'function') call.callback(message.error, message.result);
+      Data.calls.splice(
+        Data.calls.findIndex(call => call.id == message.id),
+        1
+      );
     });
 
     Data.ddp.on('nosub', message => {
@@ -227,8 +228,7 @@ module.exports = {
     let existing = false;
     for (var i in Data.subscriptions) {
       const sub = Data.subscriptions[i];
-      if (sub.inactive && sub.name === name && EJSON.equals(sub.params, params))
-        existing = sub;
+      if (sub.inactive && sub.name === name && EJSON.equals(sub.params, params)) existing = sub;
     }
 
     let id;
